@@ -1,0 +1,32 @@
+sudo: required
+dist: trusty
+
+language: node_js
+node_js: "10"
+
+matrix:
+  include:
+    - name: "macOS"
+      os: osx
+
+    - name: "Windows"
+      os: osx
+      script: build -w --x64 --publish=always && build -w --ia32 --publish=always
+
+    - name: "Linux"
+      os: linux  
+
+
+cache:
+  directories:
+    - node_modules
+
+install:
+  - nvm install 10
+  - npm install electron-builder
+
+script:
+  - build --publish=always
+
+notifications:
+  email: false

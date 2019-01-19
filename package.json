@@ -1,0 +1,70 @@
+{
+  "name": "Animator",
+  "description": "Minecraft Animation Program. Uses functions and armor stands with custom models to create animated scenes.",
+  "version": "1.1.0",
+  "license": "MIT",
+  "author": {
+    "name": "JannisX11",
+    "email": "jannis@blockbench.net"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JannisX11/animator"
+  },
+  "main": "main.js",
+  "build": {
+    "appId": "animator",
+    "productName": "Animator",
+    "artifactName": "${productName}_${arch}_${version}.${ext}",
+    "mac": {
+      "category": "macOS.application",
+      "target": "dmg"
+    },
+    "dmg": {
+      "artifactName": "${productName}_${version}.${ext}",
+      "backgroundColor": "#282c34",
+      "window": {
+        "x": 200,
+        "y": 100,
+        "width": 440,
+        "height": 220
+      },
+      "contents": [
+        {
+          "x": 130,
+          "y": 120
+        },
+        {
+          "x": 360,
+          "y": 120,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    },
+    "win": {
+      "artifactName": "${productName}_${arch}_${version}.${ext}",
+      "target": "nsis"
+    },
+    "linux": {
+      "artifactName": "${productName}_${version}.${ext}",
+      "target": [
+        "deb"
+      ],
+      "category": "3DGraphics"
+    }
+  },
+  "scripts": {
+    "dist": "build --publish=always",
+    "win64": "build -w --ia32 --publish=always",
+    "win32": "build -w --x64 --publish=always"
+  },
+  "dependencies": {
+    "nbt-js": "^0.1.0"
+  },
+  "devDependencies": {
+    "async": "^2.4.1",
+    "electron": "4.0.1",
+    "electron-builder": "^20.38.4"
+  }
+}

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Animator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="favicon.png" type="image/x-icon" />
+    <link rel="stylesheet" href="css/w3.css">
+    <link rel="stylesheet" href="css/jquery-ui.min.css">
+    <link rel="stylesheet" href="css/tree.vue.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    
+</head>
+<body spellcheck="false">
+	<script>if (typeof module === 'object') {window.module = module; module = undefined;}//jQuery Fix</script>
+        <!--    Libraries    -->
+        <script src="js/vue.min.js"></script>
+        <script src="js/tree.vue.js"></script>
+        <script src="js/nbt.js"></script>
+        <script src="js/jquery.js"></script>
+        <script src="js/jquery-ui.min.js"></script>
+        <script src="js/jquery.scrollTo.min.js"></script>
+        <script src="js/mousetrap.min.js"></script>
+        <script src="js/three.js"></script>
+        <script src="js/OrbitControls.js"></script>
+        <script src="js/TransformControls.js"></script>
+        
+        <!--    Utility    -->
+        <script src="js/util.js"></script>
+        <script src="js/interface.js"></script>
+        <script src="js/structure.js"></script>
+        <script src="js/canvas.js"></script>
+        <script src="js/general.js"></script>
+        <script src="js/timeline.js"></script>
+        <script src="js/property_bar.js"></script>
+        <script src="js/io.js"></script>
+        <script src="js/exporter.js"></script>
+
+        <!--    Features    -->
+    	<script>if (window.module) module = window.module;</script>
+
+    <!---->
+    <div id="blackout" onclick="$('.dialog#'+open_dialog).find('.cancel_btn:not([disabled])').click()"></div>
+
+    <div class="dialog" id="exporter">
+        <h2>Export</h2>
+        <div class="dialog_bar">
+            <input type="text" id="export_id" class="dark_bordered input_wide">
+        </div>
+
+        <div class="dialog_bar">
+            <label for="export_camera">Datapack Namespace</label>
+        </div>
+        <div class="dialog_bar">
+            <input type="text" id="export_namespace" class="dark_bordered input_wide">
+        </div>
+
+        <div class="dialog_bar">
+            <label for="export_camera">Export Camera Movement</label>
+        </div>
+        <div class="dialog_bar">
+            <input type="checkbox" id="export_camera" checked>
+        </div>
+
+        <div class="dialog_bar">
+            <label for="relative_start_position">Relative Start Position</label>
+        </div>
+        <div class="dialog_bar">
+            <input type="checkbox" id="relative_start_position">
+        </div>
+
+        <div class="dialog_bar">
+            <label for="export_slice">Frames per slice</label>
+        </div>
+        <div class="dialog_bar">
+            <input type="number" id="export_slice" value="10">
+        </div>
+
+        <div class="dialog_bar narrow">
+            Action After Scene
+        </div>
+        <div class="dialog_bar">
+            <select id="export_end_mode" class="tool">
+                <option id="keep" selected>Keep</option>
+                <option id="remove">Remove</option>
+                <option id="loop">Loop</option>
+            </select>
+        </div>
+        <div class="dialog_bar">
+            <button type="button" class="large confirm_btn" onclick="exporter.startExport()">Export</button>
+            <button type="button" class="large cancel_btn" onclick="hideDialog()">Cancel</button>
+        </div>
+    </div>
+
+    <div class="dialog" id="position_dialog">
+        <h2>Position</h2>
+        <div class="dialog_bar">
+            <input type="number" id="position_x" step="1" class="dark_bordered" style="width: 100px;">
+            <input type="number" id="position_y" step="1" class="dark_bordered" style="width: 100px;">
+            <input type="number" id="position_z" step="1" class="dark_bordered" style="width: 100px;">
+        </div>
+        <div class="dialog_bar">
+            <button type="button" class="large confirm_btn" onclick="applyPositionDialog()">Confirm</button>
+            <button type="button" class="large cancel_btn" onclick="hideDialog()">Cancel</button>
+        </div>
+    </div>
+
+    <div class="dialog" id="frame_data">
+        <h2>Frame Data</h2>
+        <div class="dialog_bar next_to_title">
+            <div class="tool" onclick="Frame_data.addCommand()"><i class="material-icons">flash_on</i><div class="tooltip">Add Command</div></div>
+            <div class="tool" onclick="Frame_data.addSound()"><i class="material-icons">music_note</i><div class="tooltip">Add Sound</div></div>
+        </div>
+        <ul id="frame_data_list">
+            
+        </ul>
+        <div class="dialog_bar">
+            <button type="button" class="large confirm_btn" onclick="Frame_data.saveFrameData()">Save</button>
+            <button type="button" class="large cancel_btn" onclick="hideDialog()">Cancel</button>
+        </div>
+    </div>
+
+    <div id="plugin_dialog_wrapper"></div>
+
+
+    <div id="left_bar" class="sidebar">
+        <div class="bar">
+            <div class="tool" onclick="new NPC().init()"><i class="material-icons">person_add</i><div class="tooltip">Add Character</div></div>
+            <div class="tool" onclick="new NPC(1).init()"><i class="material-icons">local_florist</i><div class="tooltip">Add Object</div></div>
+            <div class="tool" onclick="importCharacter()"><i class="material-icons">contacts</i><div class="tooltip">Load Character</div></div>
+            <div class="tool" onclick="new FrameData().init()"><i class="material-icons">playlist_add</i><div class="tooltip">Add Framedata</div></div>
+        </div>
+        <div id="outliner">
+            <div id="tree_view">
+                <vue-tree :option="option"></vue-tree>
+            </div>
+        </div>
+    </div>
+    <div id="right_bar" class="sidebar">
+        <div class="property_section" id="property_project" style="grid-area: 'p_project'">
+            <h4>Project</h4>
+            <input class="dark_bordered" oninput="savePropertyBar()" style="width: 202px;" type="text" id="project_name">
+            <input class="dark_bordered" oninput="savePropertyBar()" style="width: 64px;" type="number" min="1" max="2000" value="80" id="timeline_length">
+        </div>
+        <div class="property_section" id="property_element" style="grid-area: 'p_element'">
+            <h4>Object</h4>
+            <input class="dark_bordered" oninput="savePropertyBar()" style="width: 200px;" type="text" id="element_name">
+        </div>
+        <div class="property_section hidden" id="property_item" style="grid-area: 'p_item'">
+            <h4>Item</h4>
+            <div class="tool f_left" onclick="createItem()"><i class="material-icons">add</i><div class="tooltip">Create Item</div></div>
+            <input type="text" class="dark_bordered" id="item_search_bar" style="width: 200px" oninput="itemlist.updateSearch()">
+            <ul id="item_list">
+                <li v-for="item in filteredItems" class="item">
+                    <div class="selection_indicator" v-bind:class="{enabled: item.isOnModel}" v-on:click="item.select()"></div>
+                    <i class="material-icons">label</i><input type="text" class="dark_bordered" style="width: 152px; float: left;" v-model="item.id">
+                    <i class="material-icons">code</i><input type="number" class="dark_bordered" style="width: 40px" v-model="item.damage">
+                    <div v-on:click="item.loadModel()" class="item_model_loader dark_bordered"><i class="fa fa-folder-o"></i>{{ item.modelname }}</div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+
+    <div id="player_bar">
+        <div class="tool sel" onclick="setTool('move')" id="move"><i class="material-icons">open_with</i><div class="tooltip">Move</div></div>
+        <div class="tool" onclick="setTool('rotate')" id="rotate"><i class="material-icons">rotate_90_degrees_ccw</i><div class="tooltip">Rotate</div></div>
+        <div id="player_controls">
+            <div class="tool" onclick="Player.toStart()"><i class="material-icons">skip_previous</i><div class="tooltip">Start</div></div>
+            <div class="tool" id="play_button" onclick="Player.start()"><i class="material-icons">play_arrow</i><div class="tooltip">Play</div></div>
+            <div class="tool" onclick="Player.toEnd()"><i class="material-icons">skip_next</i><div class="tooltip">End</div></div>
+            <div class="tool context_handler">
+                <i class="material-icons">volume_down</i>
+                <div class="tooltip">Volume</div>
+                <input type="range" id="volume" min="0" max="100" step="1" value="100" oninput="Player.changeVolume()">
+            </div>
+        </div>
+        <div class="tool f_right" onclick="timelinezoomIn()"><i class="material-icons">zoom_in</i><div class="tooltip">Zoom In</div></div>
+        <div class="tool f_right" onclick="timelinezoomOut()"><i class="material-icons">zoom_out</i><div class="tooltip">Zoom Out</div></div>
+        <div class="tool f_right" onclick="lockCamera()" id="cameraLockButton"><i class="fa fa_big fa-chain-broken"></i><div class="tooltip">Lock Camera To View</div></div>
+    </div>
+    <div id="preview">
+        <canvas id="canvas">
+            An error occurred
+        </canvas>
+    </div>
+    <div id="timeline_area">
+        <!-- Name Area -->
+        <div id="timeline_name_a">
+            <div id="timeline_time" class="timeline_line">
+            </div>
+            <div v-for="line in lines" class="timeline_line" v-on:click="line.object.select()" v-bind:class="{selected: line.object && line.object.selected}">
+                <span>{{line.name}}</span>
+                <div class="icon_button" v-on:click="line.object.setFrame(line)"><i class="fa fa-plus-circle"></i></div>
+            </div>
+        </div>
+        <!-- Keyframe Area -->
+        <div id="timeline_frame_a" class="needsEvents">
+            <div id="scroll_panel">
+
+                <div id="timeline_time" class="timeline_line">
+                    <div
+                        class="keyframe timebar"
+                        v-bind:id="frame.id"
+                        v-for="frame in timecode"
+                    ><label>
+                        {{frame.label}}
+                    </label></div>
+                </div>
+
+                <div v-for="(line, l_index) in lines" class="timeline_line" v-bind:id="l_index + '_line'">
+                    <div
+                        class="keyframe"
+                        v-for="frame in line.frames"
+                        v-bind:id="'keyframe_' + l_index + '_' + frame.time"
+                        v-bind:class="{selected: frame.selected === true}"
+                        v-bind:style="{left: (frame.time * timeline.frameWidth) + 'px'}"
+                    >
+                        <i
+                            class="fa keyframe_i"
+                            v-bind:class="{'fa-square': frame.mode === 'linear',  'fa-circle': frame.mode === 'ease',  'fa-arrow-circle-right': frame.mode === 'ease_in',  'fa-arrow-circle-left': frame.mode === 'ease_out'}"
+                            v-on:contextmenu="frameContext(frame, line)"
+                            v-on:click="selectFrame(frame, line, $event)"
+                        ></i>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script>
+        canvas1 = document.getElementById('canvas')
+        initCanvas()
+        animate()
+        initializeApp()
+    </script>
+</body>
+</html>
