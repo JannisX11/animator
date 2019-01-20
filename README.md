@@ -12,7 +12,13 @@ To get a reference of the world where you animation is going to take place, you 
 
 To set up a character, click on the Add Character button on the left sidebar. In the outliner below, you can browse all the elements that are in the scene. Each character has a set of bones.
 
-To equip a bone with a model, you can import an item in the right sidebar. For each item you need to enter the ID aswell as the damage value. Below, you can import a model file. Items can be equipped, switched and hidden during the animation with keyframes. Click the big bar next to the item entry to equip the item.
+## Models
+
+To equip a bone with a model, you can import an item in the right sidebar. For each item you need to enter the ID aswell as the damage value. Below, you can import a model file.
+
+Items can be equipped, switched and hidden during the animation with keyframes. Click the big bar next to the item entry to equip the item.
+
+You can create individual models for each bone inside Blockbench. To configure the pivot point of each model, open the Display tab in the top right corner, select the head slot and position the model. The pivot point will later be at the neck of the reference player model.
 
 ## Animating
 Each rig and each bone can be animated in position and rotation. Select the rig or bone, choose the position or rotation tool above the timeline and use the gizmo to transform it. This will automatically create a new keyframe in the timeline. Right click the keyframe to change the interpolation mode or delete it.
@@ -22,4 +28,8 @@ Besides rigs, you can also animate the camera. To do this, select the camera and
 You can also add custom commands or sound effects. Click "Add Framedata", then add a keyframe to add commands or sound files.
 
 ## Export
-Go to File > Export Functions to generate your function files. 
+Go to File > Export Functions to generate your function files.
+
+Enter your scene ID and the namespace of your data pack and choose whether you want to export the camera animation, start the scene where the command is executed and what to do after the scene. Then select the functions folder inside your datadata pack.
+
+Before you can play your animation, you need to set up the function `<namespace>:scenes/core` on repeat. When you are done, you can start your function using `/function <namespace>:scenes/<animation_id>/start`. To see the camera movement, give yourself the `camera`-tag.
