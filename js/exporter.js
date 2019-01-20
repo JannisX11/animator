@@ -14,11 +14,11 @@ class Exporter {
 		    properties: ["openDirectory"]
 		}, (paths) => {
 			if (paths && paths[0]) {
-		    	scope.prepareFolder(paths[0])
+		    	scope.write(paths[0])
 			}
 		});
 	}
-	prepareFolder(path) {
+	write(path) {
 		var scope = this;
 
 		this.id = $('#export_id').val().split(' ').join('_');
@@ -26,7 +26,6 @@ class Exporter {
 		if ($('#export_namespace').val()) this.namespace = $('#export_namespace').val()
 		if (this.id === '') this.id = 'scene_' + Math.round(Math.random() * 99)
 
-		this.folder = path + osfs + 'scenes' + osfs + this.id;
 		this.exportCam = $('input#export_camera').is(':checked')
 		this.endMode = $('#export_end_mode option:selected').attr('id')
 		this.relativeStart = $('input#relative_start_position').is(':checked')
@@ -34,19 +33,20 @@ class Exporter {
 			parseInt($('#export_slice').val()),
 			1, 1000
 		)
+		this.folder = path + osfs + 'scenes';// + osfs + this.id;
 
-		fs.readdir(scope.folder, function(err) {
-		    if (err) {
-		        fs.mkdir(scope.folder, function(a) {
-		        	scope.write();
-		        })
-		    } else {
-		        scope.write();
-		    }
-		})
-	}
-	write() {
-		var scope = this;
+		try {
+			fs.readdirSync(this.folder)
+		} catch (err) {
+			fs.mkdirSync(this.folder)
+		}
+		this.folder += osfs + this.id;
+		try {
+			fs.readdirSync(this.folder)
+		} catch (err) {
+			fs.mkdirSync(this.folder)
+		}
+
 
         var path_arr = this.folder.split(osfs)
         path_arr[path_arr.length-1] = 'core.mcfunction'
