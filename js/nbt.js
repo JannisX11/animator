@@ -78,16 +78,16 @@
 				array.push(c);
 			} else if (c < 0x800) {
 				array.push(0xC0 | c >> 6);
-				array.push(0x80 | c         & 0x3F);
+				array.push(0x80 | c		 & 0x3F);
 			} else if (c < 0x10000) {
 				array.push(0xE0 |  c >> 12);
 				array.push(0x80 | (c >>  6) & 0x3F);
-				array.push(0x80 |  c        & 0x3F);
+				array.push(0x80 |  c		& 0x3F);
 			} else {
 				array.push(0xF0 | (c >> 18) & 0x07);
 				array.push(0x80 | (c >> 12) & 0x3F);
 				array.push(0x80 | (c >>  6) & 0x3F);
-				array.push(0x80 |  c        & 0x3F);
+				array.push(0x80 |  c		& 0x3F);
 			}
 		}
 		return array;
@@ -335,8 +335,8 @@
 		 *
 		 * @example
 		 * writer.compound({
-		 *     foo: { type: 'int', value: 12 },
-		 *     bar: { type: 'string', value: 'Hello, World!' }
+		 *	 foo: { type: 'int', value: 12 },
+		 *	 bar: { type: 'string', value: 'Hello, World!' }
 		 * }); */
 		this[nbt.tagTypes.compound] = function(value) {
 			var self = this;
@@ -494,7 +494,7 @@
 		 * @example
 		 * reader.compound();
 		 * // -> { foo: { type: int, value: 42 },
-		 * //      bar: { type: string, value: 'Hello! }} */
+		 * //	  bar: { type: string, value: 'Hello! }} */
 		this[nbt.tagTypes.compound] = function() {
 			var values = {};
 			while (true) {
@@ -528,11 +528,11 @@
 	 *
 	 * @example
 	 * nbt.writeUncompressed({
-	 *     name: 'My Level',
-	 *     value: {
-	 *         foo: { type: int, value: 42 },
-	 *         bar: { type: string, value: 'Hi!' }
-	 *     }
+	 *	 name: 'My Level',
+	 *	 value: {
+	 *		 foo: { type: int, value: 42 },
+	 *		 bar: { type: string, value: 'Hi!' }
+	 *	 }
 	 * }); */
 	nbt.writeUncompressed = function(value) {
 		if (!value) { throw new Error('Argument "value" is falsy'); }
@@ -549,7 +549,7 @@
 	/**
 	 * @param {ArrayBuffer|Buffer} data - an uncompressed NBT archive
 	 * @returns {{name: string, value: Object.<string, Object>}}
-	 *     a named compound
+	 *	 a named compound
 	 *
 	 * @see module:nbt.parse
 	 * @see module:nbt.writeUncompressed
@@ -557,8 +557,8 @@
 	 * @example
 	 * nbt.readUncompressed(buf);
 	 * // -> { name: 'My Level',
-	 * //      value: { foo: { type: int, value: 42 },
-	 * //               bar: { type: string, value: 'Hi!' }}} */
+	 * //	  value: { foo: { type: int, value: 42 },
+	 * //			   bar: { type: string, value: 'Hi!' }}} */
 	nbt.parseUncompressed = function(data) {
 		if (!data) { throw new Error('Argument "data" is falsy'); }
 
@@ -600,11 +600,11 @@
 	 *
 	 * @example
 	 * nbt.parse(buf, function(error, results) {
-	 *     if (error) {
-	 *         throw error;
-	 *     }
-	 *     console.log(result.name);
-	 *     console.log(result.value.foo);
+	 *	 if (error) {
+	 *		 throw error;
+	 *	 }
+	 *	 console.log(result.name);
+	 *	 console.log(result.value.foo);
 	 * }); */
 	nbt.parse = function(data, callback) {
 		if (!data) { throw new Error('Argument "data" is falsy'); }

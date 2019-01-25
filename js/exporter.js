@@ -10,11 +10,11 @@ class Exporter {
 	startExport() {
 		var scope = this;
 		app.dialog.showOpenDialog(currentwindow, {
-		    title:"Select your functions folder",
-		    properties: ["openDirectory"]
+			title:"Select your functions folder",
+			properties: ["openDirectory"]
 		}, (paths) => {
 			if (paths && paths[0]) {
-		    	scope.write(paths[0])
+				scope.write(paths[0])
 			}
 		});
 	}
@@ -48,8 +48,8 @@ class Exporter {
 		}
 
 
-        var path_arr = this.folder.split(osfs)
-        path_arr[path_arr.length-1] = 'core.mcfunction'
+		var path_arr = this.folder.split(osfs)
+		path_arr[path_arr.length-1] = 'core.mcfunction'
 		fs.readFile(path_arr.join(osfs), (err, data) => {
 			if (err) {
 				data = 'scoreboard objectives add scene dummy'
@@ -99,7 +99,7 @@ class Exporter {
 		var frameCmds = this.getFrames()
 		var slices = []
 		while(frameCmds.length) {
-		    slices.push(frameCmds.splice(0,this.frames_per_file));
+			slices.push(frameCmds.splice(0,this.frames_per_file));
 		}
 		if (slices.length > 40) return; //!
 

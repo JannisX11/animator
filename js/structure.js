@@ -1,6 +1,6 @@
 var Outliner_buttons = {
 	clear: {
-	    icon: ' fa fa-times'
+		icon: ' fa fa-times'
 	}
 }
 var keyframe_clipboard;
@@ -128,10 +128,10 @@ class NPC extends Element {
 		this.name = 'Rig'
 		Elements.forEach(function(E, Ei) {
 			if (E === scope) return
-            if (E.name === scope.name) {
-                scope.name += ' (1)'
-            }
-        })
+			if (E.name === scope.name) {
+				scope.name += ' (1)'
+			}
+		})
 		this.name = 'Rig'
 		if (elements === 0) {
 			this.children = []
@@ -369,17 +369,17 @@ class FrameData extends Element {
 	}
 	soundDialog(obj) {
 		var jqel = $(obj).parent()
-        app.dialog.showOpenDialog(app.getCurrentWindow(), {filters: [{name: 'Sounds', extensions: ['wav', 'wave', 'mp3', 'ogg']}]}, function (fileNames) {
-            if (fileNames !== undefined) {
-                jqel.find('.audio_path').val(fileNames[0])
-                jqel.find('.sound_data_name').text(pathToName(fileNames[0], true))
-            }
-        })
-    }
+		app.dialog.showOpenDialog(app.getCurrentWindow(), {filters: [{name: 'Sounds', extensions: ['wav', 'wave', 'mp3', 'ogg']}]}, function (fileNames) {
+			if (fileNames !== undefined) {
+				jqel.find('.audio_path').val(fileNames[0])
+				jqel.find('.sound_data_name').text(pathToName(fileNames[0], true))
+			}
+		})
+	}
 	deleteEntry(obj) {
 		var jqel = $(obj).parent()
-        jqel.remove()
-    }
+		jqel.remove()
+	}
 }
 class ArmorStand extends TimelineObj {
 	constructor(name, parent) {
@@ -444,9 +444,9 @@ class Item {
 	loadModel() {
 		var scope = this;
 		importText('json', function(s, p) {
-		    scope.model.generateModel(s, p)
-		    scope.modelname = pathToName(p, true)
-		    scope.modelpath = p
+			scope.model.generateModel(s, p)
+			scope.modelname = pathToName(p, true)
+			scope.modelpath = p
 		})
 	}
 	select() {
@@ -484,28 +484,28 @@ class Texture {
 	load() {
 		var thisTexture = this
 
-        if (thisTexture.material !== undefined) {
-            thisTexture.material.dispose()
-            delete thisTexture.material
-        }
-        var img = thisTexture.img = new Image()
+		if (thisTexture.material !== undefined) {
+			thisTexture.material.dispose()
+			delete thisTexture.material
+		}
+		var img = thisTexture.img = new Image()
 
-        img.src = thisTexture.path
-        img.onerror = function() {
-            this.src = 'assets/missing.png'
-        }
+		img.src = thisTexture.path
+		img.onerror = function() {
+			this.src = 'assets/missing.png'
+		}
 
-        var tex = new THREE.Texture(img)
-        img.tex = tex;
-        img.tex.magFilter = THREE.NearestFilter
-        img.tex.minFilter = THREE.LinearMipMapLinearFilter
-        img.onload = function() {
-            this.tex.needsUpdate = true;
-            thisTexture.res = img.naturalWidth;
-            thisTexture.average_color = getAverageRGB(this)
-        }
-        thisTexture.material = new THREE.MeshLambertMaterial({color: 0xffffff, map: tex, transparent: true});
-        return this;
+		var tex = new THREE.Texture(img)
+		img.tex = tex;
+		img.tex.magFilter = THREE.NearestFilter
+		img.tex.minFilter = THREE.LinearMipMapLinearFilter
+		img.onload = function() {
+			this.tex.needsUpdate = true;
+			thisTexture.res = img.naturalWidth;
+			thisTexture.average_color = getAverageRGB(this)
+		}
+		thisTexture.material = new THREE.MeshLambertMaterial({color: 0xffffff, map: tex, transparent: true});
+		return this;
 	}
 }
 var frame_limit = 1000
@@ -617,150 +617,150 @@ class Model {
 	}
 	generateModel(rawJson, path) {
 		var scope = this;
-	    var data = JSON.parse(rawJson)
-	    scope.elements = []
-	    scope.textures = {}
-	    scope.scene_obj.children = []
+		var data = JSON.parse(rawJson)
+		scope.elements = []
+		scope.textures = {}
+		scope.scene_obj.children = []
 
-	    //Texture Path
-	    var tex_arr = path.split('/').join('\\').split('\\')
-
-
-	    //Create Path Array to fetch textures
-	    var path_arr = path.split(osfs)
-	    var base_path = []
-	    var i = 0;
-	    while (i < path_arr.length) {
-	    	if (path_arr[i] === 'models') {
-	    		i = path_arr.length
-	    	} else {
-	    		base_path.push(path_arr[i])
-	    	}
-	    	i++;
-	    }
-	    base_path = base_path.join('/')
+		//Texture Path
+		var tex_arr = path.split('/').join('\\').split('\\')
 
 
+		//Create Path Array to fetch textures
+		var path_arr = path.split(osfs)
+		var base_path = []
+		var i = 0;
+		while (i < path_arr.length) {
+			if (path_arr[i] === 'models') {
+				i = path_arr.length
+			} else {
+				base_path.push(path_arr[i])
+			}
+			i++;
+		}
+		base_path = base_path.join('/')
 
-	    function fetchMaterial(key) {
-	    	key = key.substr(1)
-	    	if (scope.textures[key]) {
-	    		return scope.textures[key].material
-	    	} else {
-	    		return emptyMaterial;
-	    	}
-	    }
-	    function getUVArray(side) {
-		    var arr = [
-		        new THREE.Vector2(side.uv[0]/16, (16-side.uv[1])/16),  //0,1
-		        new THREE.Vector2(side.uv[0]/16, (16-side.uv[3])/16),  //0,0
-		        new THREE.Vector2(side.uv[2]/16, (16-side.uv[3])/16),   //1,0
-		        new THREE.Vector2(side.uv[2]/16, (16-side.uv[1])/16)  //1,1
-		    ]
-		    var rot = (side.rotation+0)
-		    while (rot > 0) {
-		        arr.push(arr.shift())
-		        rot = rot-90;
-		    }
-		    return arr;
+
+
+		function fetchMaterial(key) {
+			key = key.substr(1)
+			if (scope.textures[key]) {
+				return scope.textures[key].material
+			} else {
+				return emptyMaterial;
+			}
+		}
+		function getUVArray(side) {
+			var arr = [
+				new THREE.Vector2(side.uv[0]/16, (16-side.uv[1])/16),  //0,1
+				new THREE.Vector2(side.uv[0]/16, (16-side.uv[3])/16),  //0,0
+				new THREE.Vector2(side.uv[2]/16, (16-side.uv[3])/16),   //1,0
+				new THREE.Vector2(side.uv[2]/16, (16-side.uv[1])/16)  //1,1
+			]
+			var rot = (side.rotation+0)
+			while (rot > 0) {
+				arr.push(arr.shift())
+				rot = rot-90;
+			}
+			return arr;
 		}
 
-	    if (data.textures) {
-	    	for (var tex in data.textures) {
-	    		if (data.textures.hasOwnProperty(tex)) {
-	    			var obj = new Texture(base_path, data.textures[tex], tex).load()
+		if (data.textures) {
+			for (var tex in data.textures) {
+				if (data.textures.hasOwnProperty(tex)) {
+					var obj = new Texture(base_path, data.textures[tex], tex).load()
 
-	    			scope.textures[tex] = obj
-	    		}
-	    	}
-	    }
+					scope.textures[tex] = obj
+				}
+			}
+		}
 
-	    if (data.elements) {
-	        data.elements.forEach(function(s) {
-	            base_cube = new Cube()
-	            $.extend(true, base_cube, s);
-	            for (var face in base_cube.faces) {
-	                if (s.faces[face] === undefined) {
-	                    base_cube.faces[face].texture = '$transparent'
-	                    base_cube.faces[face].uv = [0,0,0,0]
-	                }
-	            }
-	            scope.elements.push(base_cube)
+		if (data.elements) {
+			data.elements.forEach(function(s) {
+				base_cube = new Cube()
+				$.extend(true, base_cube, s);
+				for (var face in base_cube.faces) {
+					if (s.faces[face] === undefined) {
+						base_cube.faces[face].texture = '$transparent'
+						base_cube.faces[face].uv = [0,0,0,0]
+					}
+				}
+				scope.elements.push(base_cube)
 
-	        //Material
-	            var materials = []
-	            var obj = base_cube.faces
+			//Material
+				var materials = []
+				var obj = base_cube.faces
 
-	            for (var face in obj) {
-	                if (obj.hasOwnProperty(face)) {
-	                    materials.push(fetchMaterial(obj[face].texture))
-	                }
-	            }
-	            var mesh = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MultiMaterial( materials ))
+				for (var face in obj) {
+					if (obj.hasOwnProperty(face)) {
+						materials.push(fetchMaterial(obj[face].texture))
+					}
+				}
+				var mesh = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MultiMaterial( materials ))
 
-	        //Size
-	            mesh.geometry.from(base_cube.from)
-	            mesh.geometry.to(base_cube.to)
-	            mesh.geometry.computeBoundingSphere()
+			//Size
+				mesh.geometry.from(base_cube.from)
+				mesh.geometry.to(base_cube.to)
+				mesh.geometry.computeBoundingSphere()
 
-		        if (base_cube.rotation) {
+				if (base_cube.rotation) {
 
-		            mesh.position.set(base_cube.rotation.origin[0], base_cube.rotation.origin[1], base_cube.rotation.origin[2])
-		            mesh.geometry.translate(-base_cube.rotation.origin[0], -base_cube.rotation.origin[1], -base_cube.rotation.origin[2])
+					mesh.position.set(base_cube.rotation.origin[0], base_cube.rotation.origin[1], base_cube.rotation.origin[2])
+					mesh.geometry.translate(-base_cube.rotation.origin[0], -base_cube.rotation.origin[1], -base_cube.rotation.origin[2])
 
-		            mesh.rotation[base_cube.rotation.axis] = Math.PI / (180 /base_cube.rotation.angle)
+					mesh.rotation[base_cube.rotation.axis] = Math.PI / (180 /base_cube.rotation.angle)
 
-		            if (base_cube.rotation.rescale === true) {
+					if (base_cube.rotation.rescale === true) {
 
-		                var rescale = getRescalingFactor(base_cube.rotation.angle);
-		                mesh.scale.set(rescale, rescale, rescale)
-		                mesh.scale[base_cube.rotation.axis] = 1
-		            }
-		        }
-		        mesh.geometry.translate(-8, -8, -8)
-		        scope.scene_obj.add(mesh)
-		    //UV
+						var rescale = getRescalingFactor(base_cube.rotation.angle);
+						mesh.scale.set(rescale, rescale, rescale)
+						mesh.scale[base_cube.rotation.axis] = 1
+					}
+				}
+				mesh.geometry.translate(-8, -8, -8)
+				scope.scene_obj.add(mesh)
+			//UV
 
-		        mesh.geometry.faceVertexUvs[0] = [];
-		        
-		        var base_cube = base_cube.faces
-		        for (var face in base_cube) {
-		            if (base_cube.hasOwnProperty(face)) {
-		                var fIndex = 0;
-		                switch(face) {
-		                    case 'north':   fIndex = 10;   break;
-		                    case 'east':    fIndex = 0;    break;
-		                    case 'south':   fIndex = 8;    break;
-		                    case 'west':    fIndex = 2;    break;
-		                    case 'up':      fIndex = 4;    break;
-		                    case 'down':    fIndex = 6;    break;
-		                }
-		                mesh.geometry.faceVertexUvs[0][fIndex] = [ getUVArray(base_cube[face])[0], getUVArray(base_cube[face])[1], getUVArray(base_cube[face])[3] ];
-		                mesh.geometry.faceVertexUvs[0][fIndex+1] = [ getUVArray(base_cube[face])[1], getUVArray(base_cube[face])[2], getUVArray(base_cube[face])[3] ];
-		            }
-		        }
-		        mesh.geometry.elementsNeedUpdate = true;
+				mesh.geometry.faceVertexUvs[0] = [];
+				
+				var base_cube = base_cube.faces
+				for (var face in base_cube) {
+					if (base_cube.hasOwnProperty(face)) {
+						var fIndex = 0;
+						switch(face) {
+							case 'north':   fIndex = 10;   break;
+							case 'east':	fIndex = 0;	break;
+							case 'south':   fIndex = 8;	break;
+							case 'west':	fIndex = 2;	break;
+							case 'up':	  fIndex = 4;	break;
+							case 'down':	fIndex = 6;	break;
+						}
+						mesh.geometry.faceVertexUvs[0][fIndex] = [ getUVArray(base_cube[face])[0], getUVArray(base_cube[face])[1], getUVArray(base_cube[face])[3] ];
+						mesh.geometry.faceVertexUvs[0][fIndex+1] = [ getUVArray(base_cube[face])[1], getUVArray(base_cube[face])[2], getUVArray(base_cube[face])[3] ];
+					}
+				}
+				mesh.geometry.elementsNeedUpdate = true;
 
-		        mesh.armor_stand = scope.armor_stand
-		        mesh.type = 'cube'
-	        })
-	    }
+				mesh.armor_stand = scope.armor_stand
+				mesh.type = 'cube'
+			})
+		}
 
-	    if (data.display && data.display.head) {
-	    	if (data.display.head.translation) {
-	    		this.scene_obj.position.fromArray(data.display.head.translation)
-	    	}
-	    	if (data.display.head.rotation) {
-	    		this.scene_obj.rotation.x = degreeToRad(data.display.head.rotation[0])
-	    		this.scene_obj.rotation.y = degreeToRad(data.display.head.rotation[1])
-	    		this.scene_obj.rotation.z = degreeToRad(data.display.head.rotation[2])
-	    	}
-	    	if (data.display.head.scale) {
-	    		this.scene_obj.scale.fromArray(data.display.head.scale)
-	    	}
-	    }
+		if (data.display && data.display.head) {
+			if (data.display.head.translation) {
+				this.scene_obj.position.fromArray(data.display.head.translation)
+			}
+			if (data.display.head.rotation) {
+				this.scene_obj.rotation.x = degreeToRad(data.display.head.rotation[0])
+				this.scene_obj.rotation.y = degreeToRad(data.display.head.rotation[1])
+				this.scene_obj.rotation.z = degreeToRad(data.display.head.rotation[2])
+			}
+			if (data.display.head.scale) {
+				this.scene_obj.scale.fromArray(data.display.head.scale)
+			}
+		}
 
-	    return this;
+		return this;
 	}
 }
 
@@ -787,24 +787,24 @@ function TimelineFrame(element, frametime, lineNr) {
 		var selector = '#keyframe_'+scope.lineNr+'_'+scope.time
 		$(selector).draggable({
 			revert: true,
-    		revertDuration: 0,
-    		axis: 'x',
-    		stop: function(event, ui) {
-    			var target_frame = Math.floor(ui.position.left / timeline.frameWidth)
-    			if (
-    				target_frame === scope.time ||
-    				!scope.element ||
-    				target_frame >= timeline.max ||
-    				target_frame < 0 ||
-    				scope.element.keyframes.frames[target_frame]
-    			) return;
+			revertDuration: 0,
+			axis: 'x',
+			stop: function(event, ui) {
+				var target_frame = Math.floor(ui.position.left / timeline.frameWidth)
+				if (
+					target_frame === scope.time ||
+					!scope.element ||
+					target_frame >= timeline.max ||
+					target_frame < 0 ||
+					scope.element.keyframes.frames[target_frame]
+				) return;
 
-    			scope.element.keyframes.frames[target_frame] = scope.element.keyframes.frames[scope.time]
-    			if (!event.altKey) {
-    				delete scope.element.keyframes.frames[scope.time]
-    			}
-    			timeline.update()
-    		}
+				scope.element.keyframes.frames[target_frame] = scope.element.keyframes.frames[scope.time]
+				if (!event.altKey) {
+					delete scope.element.keyframes.frames[scope.time]
+				}
+				timeline.update()
+			}
 		})
 	})
 }

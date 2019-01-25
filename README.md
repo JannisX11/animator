@@ -3,6 +3,7 @@ Animation tool for Minecraft: Java Edition. Utilises functions and armor stands 
 
 Animator is build on top of Blockbench 1.7.0 with Three.js, Vue.js and other libraries. You can contribute to the development or work on your own fork for your projects. I apologize for the partly messy code, the project was build with a deadline and I didn't have a lot of experience with coding back then.
 
+Discord Channel: [Invite (X11 Discord)](https://discord.gg/3DUqXbh)
 Download: [Latest Releases](https://github.com/JannisX11/animator/releases/latest)
 
 # How To Use

@@ -1544,17 +1544,17 @@
 				m31 = te[ 2 ], m32 = te[ 6 ], m33 = te[ 10 ];
 
 			if ( ( Math.abs( m12 - m21 ) < epsilon ) &&
-			     ( Math.abs( m13 - m31 ) < epsilon ) &&
-			     ( Math.abs( m23 - m32 ) < epsilon ) ) {
+				 ( Math.abs( m13 - m31 ) < epsilon ) &&
+				 ( Math.abs( m23 - m32 ) < epsilon ) ) {
 
 				// singularity found
 				// first check for identity matrix which must have +1 for all terms
 				// in leading diagonal and zero in other terms
 
 				if ( ( Math.abs( m12 + m21 ) < epsilon2 ) &&
-				     ( Math.abs( m13 + m31 ) < epsilon2 ) &&
-				     ( Math.abs( m23 + m32 ) < epsilon2 ) &&
-				     ( Math.abs( m11 + m22 + m33 - 3 ) < epsilon2 ) ) {
+					 ( Math.abs( m13 + m31 ) < epsilon2 ) &&
+					 ( Math.abs( m23 + m32 ) < epsilon2 ) &&
+					 ( Math.abs( m11 + m22 + m33 - 3 ) < epsilon2 ) ) {
 
 					// this singularity is identity matrix so angle = 0
 
@@ -1640,8 +1640,8 @@
 			// as we have reached here there are no singularities so we can handle normally
 
 			var s = Math.sqrt( ( m32 - m23 ) * ( m32 - m23 ) +
-			                   ( m13 - m31 ) * ( m13 - m31 ) +
-			                   ( m21 - m12 ) * ( m21 - m12 ) ); // used to normalize
+							   ( m13 - m31 ) * ( m13 - m31 ) +
+							   ( m21 - m12 ) * ( m21 - m12 ) ); // used to normalize
 
 			if ( Math.abs( s ) < 0.001 ) s = 1;
 
@@ -3437,7 +3437,7 @@
 				xAxis.x, yAxis.x, zAxis.x, 0,
 				xAxis.y, yAxis.y, zAxis.y, 0,
 				xAxis.z, yAxis.z, zAxis.z, 0,
-				0,       0,       0,       1
+				0,	   0,	   0,	   1
 			);
 
 			return this;
@@ -4957,7 +4957,7 @@
 
 	var encodings_fragment = "  gl_FragColor = linearToOutputTexel( gl_FragColor );\n";
 
-	var encodings_pars_fragment = "\nvec4 LinearToLinear( in vec4 value ) {\n\treturn value;\n}\nvec4 GammaToLinear( in vec4 value, in float gammaFactor ) {\n\treturn vec4( pow( value.xyz, vec3( gammaFactor ) ), value.w );\n}\nvec4 LinearToGamma( in vec4 value, in float gammaFactor ) {\n\treturn vec4( pow( value.xyz, vec3( 1.0 / gammaFactor ) ), value.w );\n}\nvec4 sRGBToLinear( in vec4 value ) {\n\treturn vec4( mix( pow( value.rgb * 0.9478672986 + vec3( 0.0521327014 ), vec3( 2.4 ) ), value.rgb * 0.0773993808, vec3( lessThanEqual( value.rgb, vec3( 0.04045 ) ) ) ), value.w );\n}\nvec4 LinearTosRGB( in vec4 value ) {\n\treturn vec4( mix( pow( value.rgb, vec3( 0.41666 ) ) * 1.055 - vec3( 0.055 ), value.rgb * 12.92, vec3( lessThanEqual( value.rgb, vec3( 0.0031308 ) ) ) ), value.w );\n}\nvec4 RGBEToLinear( in vec4 value ) {\n\treturn vec4( value.rgb * exp2( value.a * 255.0 - 128.0 ), 1.0 );\n}\nvec4 LinearToRGBE( in vec4 value ) {\n\tfloat maxComponent = max( max( value.r, value.g ), value.b );\n\tfloat fExp = clamp( ceil( log2( maxComponent ) ), -128.0, 127.0 );\n\treturn vec4( value.rgb / exp2( fExp ), ( fExp + 128.0 ) / 255.0 );\n}\nvec4 RGBMToLinear( in vec4 value, in float maxRange ) {\n\treturn vec4( value.xyz * value.w * maxRange, 1.0 );\n}\nvec4 LinearToRGBM( in vec4 value, in float maxRange ) {\n\tfloat maxRGB = max( value.x, max( value.g, value.b ) );\n\tfloat M      = clamp( maxRGB / maxRange, 0.0, 1.0 );\n\tM            = ceil( M * 255.0 ) / 255.0;\n\treturn vec4( value.rgb / ( M * maxRange ), M );\n}\nvec4 RGBDToLinear( in vec4 value, in float maxRange ) {\n\treturn vec4( value.rgb * ( ( maxRange / 255.0 ) / value.a ), 1.0 );\n}\nvec4 LinearToRGBD( in vec4 value, in float maxRange ) {\n\tfloat maxRGB = max( value.x, max( value.g, value.b ) );\n\tfloat D      = max( maxRange / maxRGB, 1.0 );\n\tD            = min( floor( D ) / 255.0, 1.0 );\n\treturn vec4( value.rgb * ( D * ( 255.0 / maxRange ) ), D );\n}\nconst mat3 cLogLuvM = mat3( 0.2209, 0.3390, 0.4184, 0.1138, 0.6780, 0.7319, 0.0102, 0.1130, 0.2969 );\nvec4 LinearToLogLuv( in vec4 value )  {\n\tvec3 Xp_Y_XYZp = value.rgb * cLogLuvM;\n\tXp_Y_XYZp = max(Xp_Y_XYZp, vec3(1e-6, 1e-6, 1e-6));\n\tvec4 vResult;\n\tvResult.xy = Xp_Y_XYZp.xy / Xp_Y_XYZp.z;\n\tfloat Le = 2.0 * log2(Xp_Y_XYZp.y) + 127.0;\n\tvResult.w = fract(Le);\n\tvResult.z = (Le - (floor(vResult.w*255.0))/255.0)/255.0;\n\treturn vResult;\n}\nconst mat3 cLogLuvInverseM = mat3( 6.0014, -2.7008, -1.7996, -1.3320, 3.1029, -5.7721, 0.3008, -1.0882, 5.6268 );\nvec4 LogLuvToLinear( in vec4 value ) {\n\tfloat Le = value.z * 255.0 + value.w;\n\tvec3 Xp_Y_XYZp;\n\tXp_Y_XYZp.y = exp2((Le - 127.0) / 2.0);\n\tXp_Y_XYZp.z = Xp_Y_XYZp.y / value.y;\n\tXp_Y_XYZp.x = value.x * Xp_Y_XYZp.z;\n\tvec3 vRGB = Xp_Y_XYZp.rgb * cLogLuvInverseM;\n\treturn vec4( max(vRGB, 0.0), 1.0 );\n}\n";
+	var encodings_pars_fragment = "\nvec4 LinearToLinear( in vec4 value ) {\n\treturn value;\n}\nvec4 GammaToLinear( in vec4 value, in float gammaFactor ) {\n\treturn vec4( pow( value.xyz, vec3( gammaFactor ) ), value.w );\n}\nvec4 LinearToGamma( in vec4 value, in float gammaFactor ) {\n\treturn vec4( pow( value.xyz, vec3( 1.0 / gammaFactor ) ), value.w );\n}\nvec4 sRGBToLinear( in vec4 value ) {\n\treturn vec4( mix( pow( value.rgb * 0.9478672986 + vec3( 0.0521327014 ), vec3( 2.4 ) ), value.rgb * 0.0773993808, vec3( lessThanEqual( value.rgb, vec3( 0.04045 ) ) ) ), value.w );\n}\nvec4 LinearTosRGB( in vec4 value ) {\n\treturn vec4( mix( pow( value.rgb, vec3( 0.41666 ) ) * 1.055 - vec3( 0.055 ), value.rgb * 12.92, vec3( lessThanEqual( value.rgb, vec3( 0.0031308 ) ) ) ), value.w );\n}\nvec4 RGBEToLinear( in vec4 value ) {\n\treturn vec4( value.rgb * exp2( value.a * 255.0 - 128.0 ), 1.0 );\n}\nvec4 LinearToRGBE( in vec4 value ) {\n\tfloat maxComponent = max( max( value.r, value.g ), value.b );\n\tfloat fExp = clamp( ceil( log2( maxComponent ) ), -128.0, 127.0 );\n\treturn vec4( value.rgb / exp2( fExp ), ( fExp + 128.0 ) / 255.0 );\n}\nvec4 RGBMToLinear( in vec4 value, in float maxRange ) {\n\treturn vec4( value.xyz * value.w * maxRange, 1.0 );\n}\nvec4 LinearToRGBM( in vec4 value, in float maxRange ) {\n\tfloat maxRGB = max( value.x, max( value.g, value.b ) );\n\tfloat M	  = clamp( maxRGB / maxRange, 0.0, 1.0 );\n\tM			= ceil( M * 255.0 ) / 255.0;\n\treturn vec4( value.rgb / ( M * maxRange ), M );\n}\nvec4 RGBDToLinear( in vec4 value, in float maxRange ) {\n\treturn vec4( value.rgb * ( ( maxRange / 255.0 ) / value.a ), 1.0 );\n}\nvec4 LinearToRGBD( in vec4 value, in float maxRange ) {\n\tfloat maxRGB = max( value.x, max( value.g, value.b ) );\n\tfloat D	  = max( maxRange / maxRGB, 1.0 );\n\tD			= min( floor( D ) / 255.0, 1.0 );\n\treturn vec4( value.rgb * ( D * ( 255.0 / maxRange ) ), D );\n}\nconst mat3 cLogLuvM = mat3( 0.2209, 0.3390, 0.4184, 0.1138, 0.6780, 0.7319, 0.0102, 0.1130, 0.2969 );\nvec4 LinearToLogLuv( in vec4 value )  {\n\tvec3 Xp_Y_XYZp = value.rgb * cLogLuvM;\n\tXp_Y_XYZp = max(Xp_Y_XYZp, vec3(1e-6, 1e-6, 1e-6));\n\tvec4 vResult;\n\tvResult.xy = Xp_Y_XYZp.xy / Xp_Y_XYZp.z;\n\tfloat Le = 2.0 * log2(Xp_Y_XYZp.y) + 127.0;\n\tvResult.w = fract(Le);\n\tvResult.z = (Le - (floor(vResult.w*255.0))/255.0)/255.0;\n\treturn vResult;\n}\nconst mat3 cLogLuvInverseM = mat3( 6.0014, -2.7008, -1.7996, -1.3320, 3.1029, -5.7721, 0.3008, -1.0882, 5.6268 );\nvec4 LogLuvToLinear( in vec4 value ) {\n\tfloat Le = value.z * 255.0 + value.w;\n\tvec3 Xp_Y_XYZp;\n\tXp_Y_XYZp.y = exp2((Le - 127.0) / 2.0);\n\tXp_Y_XYZp.z = Xp_Y_XYZp.y / value.y;\n\tXp_Y_XYZp.x = value.x * Xp_Y_XYZp.z;\n\tvec3 vRGB = Xp_Y_XYZp.rgb * cLogLuvInverseM;\n\treturn vec4( max(vRGB, 0.0), 1.0 );\n}\n";
 
 	var envmap_fragment = "#ifdef USE_ENVMAP\n\t#if defined( USE_BUMPMAP ) || defined( USE_NORMALMAP ) || defined( PHONG )\n\t\tvec3 cameraToVertex = normalize( vWorldPosition - cameraPosition );\n\t\tvec3 worldNormal = inverseTransformDirection( normal, viewMatrix );\n\t\t#ifdef ENVMAP_MODE_REFLECTION\n\t\t\tvec3 reflectVec = reflect( cameraToVertex, worldNormal );\n\t\t#else\n\t\t\tvec3 reflectVec = refract( cameraToVertex, worldNormal, refractionRatio );\n\t\t#endif\n\t#else\n\t\tvec3 reflectVec = vReflect;\n\t#endif\n\t#ifdef ENVMAP_TYPE_CUBE\n\t\tvec4 envColor = textureCube( envMap, flipNormal * vec3( flipEnvMap * reflectVec.x, reflectVec.yz ) );\n\t#elif defined( ENVMAP_TYPE_EQUIREC )\n\t\tvec2 sampleUV;\n\t\tsampleUV.y = saturate( flipNormal * reflectVec.y * 0.5 + 0.5 );\n\t\tsampleUV.x = atan( flipNormal * reflectVec.z, flipNormal * reflectVec.x ) * RECIPROCAL_PI2 + 0.5;\n\t\tvec4 envColor = texture2D( envMap, sampleUV );\n\t#elif defined( ENVMAP_TYPE_SPHERE )\n\t\tvec3 reflectView = flipNormal * normalize( ( viewMatrix * vec4( reflectVec, 0.0 ) ).xyz + vec3( 0.0, 0.0, 1.0 ) );\n\t\tvec4 envColor = texture2D( envMap, reflectView.xy * 0.5 + 0.5 );\n\t#else\n\t\tvec4 envColor = vec4( 0.0 );\n\t#endif\n\tenvColor = envMapTexelToLinear( envColor );\n\t#ifdef ENVMAP_BLENDING_MULTIPLY\n\t\toutgoingLight = mix( outgoingLight, outgoingLight * envColor.xyz, specularStrength * reflectivity );\n\t#elif defined( ENVMAP_BLENDING_MIX )\n\t\toutgoingLight = mix( outgoingLight, envColor.xyz, specularStrength * reflectivity );\n\t#elif defined( ENVMAP_BLENDING_ADD )\n\t\toutgoingLight += envColor.xyz * specularStrength * reflectivity;\n\t#endif\n#endif\n";
 
@@ -6413,8 +6413,8 @@
 
 			// buffers
 
-			vertexBuffer     = gl.createBuffer();
-			elementBuffer    = gl.createBuffer();
+			vertexBuffer	 = gl.createBuffer();
+			elementBuffer	= gl.createBuffer();
 
 			gl.bindBuffer( gl.ARRAY_BUFFER, vertexBuffer );
 			gl.bufferData( gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW );
@@ -6424,7 +6424,7 @@
 
 			// textures
 
-			tempTexture      = gl.createTexture();
+			tempTexture	  = gl.createTexture();
 			occlusionTexture = gl.createTexture();
 
 			state.bindTexture( gl.TEXTURE_2D, tempTexture );
@@ -6477,9 +6477,9 @@
 							"visibility += texture2D( occlusionMap, vec2( 0.1, 0.5 ) );",
 							"visibility += texture2D( occlusionMap, vec2( 0.5, 0.5 ) );",
 
-							"vVisibility =        visibility.r / 9.0;",
+							"vVisibility =		visibility.r / 9.0;",
 							"vVisibility *= 1.0 - visibility.g / 9.0;",
-							"vVisibility *=       visibility.b / 9.0;",
+							"vVisibility *=	   visibility.b / 9.0;",
 							"vVisibility *= 1.0 - visibility.a / 9.0;",
 
 							"pos.x = cos( rotation ) * position.x - sin( rotation ) * position.y;",
@@ -6539,17 +6539,17 @@
 
 			attributes = {
 				vertex: gl.getAttribLocation ( program, "position" ),
-				uv:     gl.getAttribLocation ( program, "uv" )
+				uv:	 gl.getAttribLocation ( program, "uv" )
 			};
 
 			uniforms = {
-				renderType:     gl.getUniformLocation( program, "renderType" ),
-				map:            gl.getUniformLocation( program, "map" ),
+				renderType:	 gl.getUniformLocation( program, "renderType" ),
+				map:			gl.getUniformLocation( program, "map" ),
 				occlusionMap:   gl.getUniformLocation( program, "occlusionMap" ),
-				opacity:        gl.getUniformLocation( program, "opacity" ),
-				color:          gl.getUniformLocation( program, "color" ),
-				scale:          gl.getUniformLocation( program, "scale" ),
-				rotation:       gl.getUniformLocation( program, "rotation" ),
+				opacity:		gl.getUniformLocation( program, "opacity" ),
+				color:		  gl.getUniformLocation( program, "color" ),
+				scale:		  gl.getUniformLocation( program, "scale" ),
+				rotation:	   gl.getUniformLocation( program, "rotation" ),
 				screenPosition: gl.getUniformLocation( program, "screenPosition" )
 			};
 
@@ -6558,7 +6558,7 @@
 		/*
 		 * Render lens flares
 		 * Method: renders 16x16 0xff00ff-colored points scattered over the light source area,
-		 *         reads these back and calculates occlusion.
+		 *		 reads these back and calculates occlusion.
 		 */
 
 		this.render = function ( scene, camera, viewport ) {
@@ -15402,7 +15402,7 @@
 
 		buildPlane( 'z', 'y', 'x', - 1, - 1, depth, height,   width,  depthSegments, heightSegments, 0 ); // px
 		buildPlane( 'z', 'y', 'x',   1, - 1, depth, height, - width,  depthSegments, heightSegments, 1 ); // nx
-		buildPlane( 'x', 'z', 'y',   1,   1, width, depth,    height, widthSegments, depthSegments,  2 ); // py
+		buildPlane( 'x', 'z', 'y',   1,   1, width, depth,	height, widthSegments, depthSegments,  2 ); // py
 		buildPlane( 'x', 'z', 'y',   1, - 1, width, depth,  - height, widthSegments, depthSegments,  3 ); // ny
 		buildPlane( 'x', 'y', 'z',   1, - 1, width, height,   depth,  widthSegments, heightSegments, 4 ); // pz
 		buildPlane( 'x', 'y', 'z', - 1, - 1, width, height, - depth,  widthSegments, heightSegments, 5 ); // nz
@@ -16649,7 +16649,7 @@
 
 			prefixVertex = [
 
-	        
+			
 				'precision ' + parameters.precision + ' float;',
 				'precision ' + parameters.precision + ' int;',
 
@@ -17058,7 +17058,7 @@
 				//
 				//  - leave some extra space for other uniforms
 				//  - limit here is ANGLE's 254 max uniform vectors
-				//    (up to 54 should be safe)
+				//	(up to 54 should be safe)
 
 				var nVertexUniforms = capabilities.maxVertexUniforms;
 				var nVertexMatrices = Math.floor( ( nVertexUniforms - 20 ) / 4 );
@@ -18154,7 +18154,7 @@
 					// (https://www.khronos.org/registry/webgl/extensions/WEBGL_depth_texture/)
 					if ( texture.type !== UnsignedShortType && texture.type !== UnsignedIntType ) {
 
-					        console.warn( 'THREE.WebGLRenderer: Use UnsignedShortType or UnsignedIntType for DepthFormat DepthTexture.' );
+							console.warn( 'THREE.WebGLRenderer: Use UnsignedShortType or UnsignedIntType for DepthFormat DepthTexture.' );
 
 						texture.type = UnsignedShortType;
 						glType = paramThreeToGL( texture.type );
@@ -18174,7 +18174,7 @@
 					// (https://www.khronos.org/registry/webgl/extensions/WEBGL_depth_texture/)
 					if ( texture.type !== UnsignedInt248Type ) {
 
-					        console.warn( 'THREE.WebGLRenderer: Use UnsignedInt248Type for DepthStencilFormat DepthTexture.' );
+							console.warn( 'THREE.WebGLRenderer: Use UnsignedInt248Type for DepthStencilFormat DepthTexture.' );
 
 						texture.type = UnsignedInt248Type;
 						glType = paramThreeToGL( texture.type );
@@ -18772,8 +18772,8 @@
 				setFunc: function ( stencilFunc, stencilRef, stencilMask ) {
 
 					if ( currentStencilFunc !== stencilFunc ||
-					     currentStencilRef 	!== stencilRef 	||
-					     currentStencilFuncMask !== stencilMask ) {
+						 currentStencilRef 	!== stencilRef 	||
+						 currentStencilFuncMask !== stencilMask ) {
 
 						gl.stencilFunc( stencilFunc, stencilRef, stencilMask );
 
@@ -18788,8 +18788,8 @@
 				setOp: function ( stencilFail, stencilZFail, stencilZPass ) {
 
 					if ( currentStencilFail	 !== stencilFail 	||
-					     currentStencilZFail !== stencilZFail ||
-					     currentStencilZPass !== stencilZPass ) {
+						 currentStencilZFail !== stencilZFail ||
+						 currentStencilZPass !== stencilZPass ) {
 
 						gl.stencilOp( stencilFail, stencilZFail, stencilZPass );
 
@@ -19021,8 +19021,8 @@
 				compressedTextureFormats = [];
 
 				if ( extensions.get( 'WEBGL_compressed_texture_pvrtc' ) ||
-				     extensions.get( 'WEBGL_compressed_texture_s3tc' ) ||
-				     extensions.get( 'WEBGL_compressed_texture_etc1' ) ) {
+					 extensions.get( 'WEBGL_compressed_texture_s3tc' ) ||
+					 extensions.get( 'WEBGL_compressed_texture_etc1' ) ) {
 
 					var formats = gl.getParameter( gl.COMPRESSED_TEXTURE_FORMATS );
 
@@ -19531,7 +19531,7 @@
 			if ( precision === 'highp' ) {
 
 				if ( gl.getShaderPrecisionFormat( gl.VERTEX_SHADER, gl.HIGH_FLOAT ).precision > 0 &&
-				     gl.getShaderPrecisionFormat( gl.FRAGMENT_SHADER, gl.HIGH_FLOAT ).precision > 0 ) {
+					 gl.getShaderPrecisionFormat( gl.FRAGMENT_SHADER, gl.HIGH_FLOAT ).precision > 0 ) {
 
 					return 'highp';
 
@@ -19544,7 +19544,7 @@
 			if ( precision === 'mediump' ) {
 
 				if ( gl.getShaderPrecisionFormat( gl.VERTEX_SHADER, gl.MEDIUM_FLOAT ).precision > 0 &&
-				     gl.getShaderPrecisionFormat( gl.FRAGMENT_SHADER, gl.MEDIUM_FLOAT ).precision > 0 ) {
+					 gl.getShaderPrecisionFormat( gl.FRAGMENT_SHADER, gl.MEDIUM_FLOAT ).precision > 0 ) {
 
 					return 'mediump';
 
@@ -22213,8 +22213,8 @@
 					_matrix4.premultiply( viewMatrix );
 					_matrix42.extractRotation( _matrix4 );
 
-					uniforms.halfWidth.set( light.width * 0.5,                0.0, 0.0 );
-					uniforms.halfHeight.set(              0.0, light.height * 0.5, 0.0 );
+					uniforms.halfWidth.set( light.width * 0.5,				0.0, 0.0 );
+					uniforms.halfHeight.set(			  0.0, light.height * 0.5, 0.0 );
 
 					uniforms.halfWidth.applyMatrix4( _matrix42 );
 					uniforms.halfHeight.applyMatrix4( _matrix42 );
@@ -23198,11 +23198,11 @@
 		if ( this.useVertexTexture ) {
 
 			// layout (1 matrix = 4 pixels)
-			//      RGBA RGBA RGBA RGBA (=> column1, column2, column3, column4)
+			//	  RGBA RGBA RGBA RGBA (=> column1, column2, column3, column4)
 			//  with  8x8  pixel texture max   16 bones * 4 pixels =  (8 * 8)
-			//       16x16 pixel texture max   64 bones * 4 pixels = (16 * 16)
-			//       32x32 pixel texture max  256 bones * 4 pixels = (32 * 32)
-			//       64x64 pixel texture max 1024 bones * 4 pixels = (64 * 64)
+			//	   16x16 pixel texture max   64 bones * 4 pixels = (16 * 16)
+			//	   32x32 pixel texture max  256 bones * 4 pixels = (32 * 32)
+			//	   64x64 pixel texture max 1024 bones * 4 pixels = (64 * 64)
 
 
 			var size = Math.sqrt( this.bones.length * 4 ); // 4 pixels needed for 1 matrix
@@ -24772,11 +24772,11 @@
 	function TetrahedronBufferGeometry( radius, detail ) {
 
 		var vertices = [
-			1,  1,  1,   - 1, - 1,  1,   - 1,  1, - 1,    1, - 1, - 1
+			1,  1,  1,   - 1, - 1,  1,   - 1,  1, - 1,	1, - 1, - 1
 		];
 
 		var indices = [
-			2,  1,  0,    0,  3,  2,    1,  3,  0,    2,  3,  1
+			2,  1,  0,	0,  3,  2,	1,  3,  0,	2,  3,  1
 		];
 
 		PolyhedronBufferGeometry.call( this, vertices, indices, radius, detail );
@@ -24823,11 +24823,11 @@
 	function OctahedronBufferGeometry( radius, detail ) {
 
 		var vertices = [
-			1, 0, 0,   - 1, 0, 0,    0, 1, 0,    0, - 1, 0,    0, 0, 1,    0, 0, - 1
+			1, 0, 0,   - 1, 0, 0,	0, 1, 0,	0, - 1, 0,	0, 0, 1,	0, 0, - 1
 		];
 
 		var indices = [
-			0, 2, 4,    0, 4, 3,    0, 3, 5,    0, 5, 2,    1, 2, 5,    1, 5, 3,    1, 3, 4,    1, 4, 2
+			0, 2, 4,	0, 4, 3,	0, 3, 5,	0, 5, 2,	1, 2, 5,	1, 5, 3,	1, 3, 4,	1, 4, 2
 		];
 
 		PolyhedronBufferGeometry.call( this, vertices, indices, radius, detail );
@@ -24876,16 +24876,16 @@
 		var t = ( 1 + Math.sqrt( 5 ) ) / 2;
 
 		var vertices = [
-			- 1,  t,  0,    1,  t,  0,   - 1, - t,  0,    1, - t,  0,
-			 0, - 1,  t,    0,  1,  t,    0, - 1, - t,    0,  1, - t,
-			 t,  0, - 1,    t,  0,  1,   - t,  0, - 1,   - t,  0,  1
+			- 1,  t,  0,	1,  t,  0,   - 1, - t,  0,	1, - t,  0,
+			 0, - 1,  t,	0,  1,  t,	0, - 1, - t,	0,  1, - t,
+			 t,  0, - 1,	t,  0,  1,   - t,  0, - 1,   - t,  0,  1
 		];
 
 		var indices = [
-			 0, 11,  5,    0,  5,  1,    0,  1,  7,    0,  7, 10,    0, 10, 11,
-			 1,  5,  9,    5, 11,  4,   11, 10,  2,   10,  7,  6,    7,  1,  8,
-			 3,  9,  4,    3,  4,  2,    3,  2,  6,    3,  6,  8,    3,  8,  9,
-			 4,  9,  5,    2,  4, 11,    6,  2, 10,    8,  6,  7,    9,  8,  1
+			 0, 11,  5,	0,  5,  1,	0,  1,  7,	0,  7, 10,	0, 10, 11,
+			 1,  5,  9,	5, 11,  4,   11, 10,  2,   10,  7,  6,	7,  1,  8,
+			 3,  9,  4,	3,  4,  2,	3,  2,  6,	3,  6,  8,	3,  8,  9,
+			 4,  9,  5,	2,  4, 11,	6,  2, 10,	8,  6,  7,	9,  8,  1
 		];
 
 		PolyhedronBufferGeometry.call( this, vertices, indices, radius, detail );
@@ -24937,37 +24937,37 @@
 		var vertices = [
 
 			// (±1, ±1, ±1)
-			- 1, - 1, - 1,    - 1, - 1,  1,
-			- 1,  1, - 1,    - 1,  1,  1,
-			  1, - 1, - 1,     1, - 1,  1,
-			  1,  1, - 1,     1,  1,  1,
+			- 1, - 1, - 1,	- 1, - 1,  1,
+			- 1,  1, - 1,	- 1,  1,  1,
+			  1, - 1, - 1,	 1, - 1,  1,
+			  1,  1, - 1,	 1,  1,  1,
 
 			// (0, ±1/φ, ±φ)
-			 0, - r, - t,     0, - r,  t,
-			 0,  r, - t,     0,  r,  t,
+			 0, - r, - t,	 0, - r,  t,
+			 0,  r, - t,	 0,  r,  t,
 
 			// (±1/φ, ±φ, 0)
-			- r, - t,  0,    - r,  t,  0,
-			 r, - t,  0,     r,  t,  0,
+			- r, - t,  0,	- r,  t,  0,
+			 r, - t,  0,	 r,  t,  0,
 
 			// (±φ, 0, ±1/φ)
-			- t,  0, - r,     t,  0, - r,
-			- t,  0,  r,     t,  0,  r
+			- t,  0, - r,	 t,  0, - r,
+			- t,  0,  r,	 t,  0,  r
 		];
 
 		var indices = [
-			 3, 11,  7,      3,  7, 15,      3, 15, 13,
-			 7, 19, 17,      7, 17,  6,      7,  6, 15,
-			17,  4,  8,     17,  8, 10,     17, 10,  6,
-			 8,  0, 16,      8, 16,  2,      8,  2, 10,
-			 0, 12,  1,      0,  1, 18,      0, 18, 16,
-			 6, 10,  2,      6,  2, 13,      6, 13, 15,
-			 2, 16, 18,      2, 18,  3,      2,  3, 13,
-			18,  1,  9,     18,  9, 11,     18, 11,  3,
-			 4, 14, 12,      4, 12,  0,      4,  0,  8,
-			11,  9,  5,     11,  5, 19,     11, 19,  7,
-			19,  5, 14,     19, 14,  4,     19,  4, 17,
-			 1, 12, 14,      1, 14,  5,      1,  5,  9
+			 3, 11,  7,	  3,  7, 15,	  3, 15, 13,
+			 7, 19, 17,	  7, 17,  6,	  7,  6, 15,
+			17,  4,  8,	 17,  8, 10,	 17, 10,  6,
+			 8,  0, 16,	  8, 16,  2,	  8,  2, 10,
+			 0, 12,  1,	  0,  1, 18,	  0, 18, 16,
+			 6, 10,  2,	  6,  2, 13,	  6, 13, 15,
+			 2, 16, 18,	  2, 18,  3,	  2,  3, 13,
+			18,  1,  9,	 18,  9, 11,	 18, 11,  3,
+			 4, 14, 12,	  4, 12,  0,	  4,  0,  8,
+			11,  9,  5,	 11,  5, 19,	 11, 19,  7,
+			19,  5, 14,	 19, 14,  4,	 19,  4, 17,
+			 1, 12, 14,	  1, 14,  5,	  1,  5,  9
 		];
 
 		PolyhedronBufferGeometry.call( this, vertices, indices, radius, detail );
@@ -25661,9 +25661,9 @@
 
 					/* three consecutive vertices in current polygon, <u,v,w> */
 
-					u = v; 	 	if ( nv <= u ) u = 0;     /* previous */
-					v = u + 1;  if ( nv <= v ) v = 0;     /* new v    */
-					w = v + 1;  if ( nv <= w ) w = 0;     /* next     */
+					u = v; 	 	if ( nv <= u ) u = 0;	 /* previous */
+					v = u + 1;  if ( nv <= v ) v = 0;	 /* new v	*/
+					w = v + 1;  if ( nv <= w ) w = 0;	 /* next	 */
 
 					if ( snip( contour, u, v, w, nv, verts ) ) {
 
@@ -25826,7 +25826,7 @@
 
 						if ( ( inSeg1Pt1.x !== inSeg2Pt1.x ) ||
 							 ( inSeg1Pt1.y !== inSeg2Pt1.y ) )		return [];	// they are distinct  points
-						return [ inSeg1Pt1 ];                 						// they are the same point
+						return [ inSeg1Pt1 ];				 						// they are the same point
 
 					}
 					// segment#1  is a single point
@@ -26442,7 +26442,7 @@
 				// scaling factor for v_prev to intersection point
 
 				var sf = (  ( ptNextShift_x - ptPrevShift_x ) * v_next_y -
-							( ptNextShift_y - ptPrevShift_y ) * v_next_x    ) /
+							( ptNextShift_y - ptPrevShift_y ) * v_next_x	) /
 						  ( v_prev_x * v_next_y - v_prev_y * v_next_x );
 
 				// vector from inPt to intersection point
@@ -27256,11 +27256,11 @@
 	 */
 
 	// points - to create a closed torus, one must use a set of points
-	//    like so: [ a, b, c, d, a ], see first is the same as last.
+	//	like so: [ a, b, c, d, a ], see first is the same as last.
 	// segments - the number of circumference segments to create
 	// phiStart - the starting radian
 	// phiLength - the radian (0 to 2PI) range of the lathed section
-	//    2PI is a closed lathe, less than 2PI is a portion.
+	//	2PI is a closed lathe, less than 2PI is a portion.
 
 	function LatheGeometry( points, segments, phiStart, phiLength ) {
 
@@ -30762,10 +30762,10 @@
 
 			// evaluate polynomials
 
-			var sP =     - wP   * ppp   +         2 * wP    * pp    -          wP   * p;
-			var s0 = ( 1 + wP ) * ppp   + (-1.5 - 2 * wP )  * pp    + ( -0.5 + wP ) * p     + 1;
-			var s1 = (-1 - wN ) * ppp   + ( 1.5 +   wN   )  * pp    +    0.5        * p;
-			var sN =       wN   * ppp   -           wN      * pp;
+			var sP =	 - wP   * ppp   +		 2 * wP	* pp	-		  wP   * p;
+			var s0 = ( 1 + wP ) * ppp   + (-1.5 - 2 * wP )  * pp	+ ( -0.5 + wP ) * p	 + 1;
+			var s1 = (-1 - wN ) * ppp   + ( 1.5 +   wN   )  * pp	+	0.5		* p;
+			var sN =	   wN   * ppp   -		   wN	  * pp;
 
 			// combine data linearly
 
@@ -32719,12 +32719,12 @@
 					type = faces[ offset ++ ];
 
 
-					isQuad              = isBitSet( type, 0 );
-					hasMaterial         = isBitSet( type, 1 );
-					hasFaceVertexUv     = isBitSet( type, 3 );
-					hasFaceNormal       = isBitSet( type, 4 );
+					isQuad			  = isBitSet( type, 0 );
+					hasMaterial		 = isBitSet( type, 1 );
+					hasFaceVertexUv	 = isBitSet( type, 3 );
+					hasFaceNormal	   = isBitSet( type, 4 );
 					hasFaceVertexNormal = isBitSet( type, 5 );
-					hasFaceColor	     = isBitSet( type, 6 );
+					hasFaceColor		 = isBitSet( type, 6 );
 					hasFaceVertexColor  = isBitSet( type, 7 );
 
 					// console.log("type", type, "bits", isQuad, hasMaterial, hasFaceVertexUv, hasFaceNormal, hasFaceVertexNormal, hasFaceColor, hasFaceVertexColor);
@@ -32954,7 +32954,7 @@
 
 					for ( var i = 0, l = json.skinWeights.length; i < l; i += influencesPerVertex ) {
 
-						var x =                               json.skinWeights[ i ];
+						var x =							   json.skinWeights[ i ];
 						var y = ( influencesPerVertex > 1 ) ? json.skinWeights[ i + 1 ] : 0;
 						var z = ( influencesPerVertex > 2 ) ? json.skinWeights[ i + 2 ] : 0;
 						var w = ( influencesPerVertex > 3 ) ? json.skinWeights[ i + 3 ] : 0;
@@ -32969,7 +32969,7 @@
 
 					for ( var i = 0, l = json.skinIndices.length; i < l; i += influencesPerVertex ) {
 
-						var a =                               json.skinIndices[ i ];
+						var a =							   json.skinIndices[ i ];
 						var b = ( influencesPerVertex > 1 ) ? json.skinIndices[ i + 1 ] : 0;
 						var c = ( influencesPerVertex > 2 ) ? json.skinIndices[ i + 2 ] : 0;
 						var d = ( influencesPerVertex > 3 ) ? json.skinIndices[ i + 3 ] : 0;
@@ -34986,7 +34986,7 @@
 
 				var polyLen = inPolygon.length;
 
-				// inPt on polygon contour => immediate success    or
+				// inPt on polygon contour => immediate success	or
 				// toggling of inside/outside at every single! intersection point of an edge
 				//  with the horizontal line through inPt, left of inPt
 				//  not counting lowerY endpoints of edges and whole edges on that line
@@ -36994,15 +36994,15 @@
 	PropertyBinding.parseTrackName = function( trackName ) {
 
 		// matches strings in the form of:
-		//    nodeName.property
-		//    nodeName.property[accessor]
-		//    nodeName.material.property[accessor]
-		//    uuid.property[accessor]
-		//    uuid.objectName[objectIndex].propertyName[propertyIndex]
-		//    parentName/nodeName.property
-		//    parentName/parentName/nodeName.property[index]
-		//    .bone[Armature.DEF_cog].position
-		//    scene:helium_balloon_model:helium_balloon_model.position
+		//	nodeName.property
+		//	nodeName.property[accessor]
+		//	nodeName.material.property[accessor]
+		//	uuid.property[accessor]
+		//	uuid.objectName[objectIndex].propertyName[propertyIndex]
+		//	parentName/nodeName.property
+		//	parentName/parentName/nodeName.property[index]
+		//	.bone[Armature.DEF_cog].position
+		//	scene:helium_balloon_model:helium_balloon_model.position
 		// created and tested via https://regex101.com/#javascript
 
 		var re = /^((?:[\w-]+[\/:])*)([\w-]+)?(?:\.([\w-]+)(?:\[(.+)\])?)?\.([\w-]+)(?:\[(.+)\])?$/;
@@ -38700,9 +38700,9 @@
 
 			// [ active actions |  inactive actions  ]
 			// [  active actions >| inactive actions ]
-			//                 s        a
-			//                  <-swap->
-			//                 a        s
+			//				 s		a
+			//				  <-swap->
+			//				 a		s
 
 			var actions = this._actions,
 				prevIndex = action._cacheIndex,
@@ -38723,9 +38723,9 @@
 
 			// [  active actions  | inactive actions ]
 			// [ active actions |< inactive actions  ]
-			//        a        s
-			//         <-swap->
-			//        s        a
+			//		a		s
+			//		 <-swap->
+			//		s		a
 
 			var actions = this._actions,
 				prevIndex = action._cacheIndex,
@@ -41023,7 +41023,7 @@
 
 			setPoint( "u1",   w * 0.7, h * 1.1, - 1 );
 			setPoint( "u2", - w * 0.7, h * 1.1, - 1 );
-			setPoint( "u3",         0, h * 2,   - 1 );
+			setPoint( "u3",		 0, h * 2,   - 1 );
 
 			// cross
 

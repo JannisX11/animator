@@ -183,6 +183,6 @@ if (typeof module !== "undefined" && module.exports) {
   module.exports.saveAs = saveAs;
 } else if ((typeof define !== "undefined" && define !== null) && (define.amd !== null)) {
   define("FileSaver.js", function() {
-    return saveAs;
+	return saveAs;
   });
 }
