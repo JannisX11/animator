@@ -1,4 +1,4 @@
-var appVersion = '1.1.0'
+var appVersion = '1.1.2'
 var File, i;
 var keybinds, settings, display_presets;
 var _vect;
