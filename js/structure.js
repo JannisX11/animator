@@ -642,10 +642,13 @@ class Model {
 
 
 
-		function fetchMaterial(key) {
-			key = key.substr(1)
+		function fetchMaterial(face) {
+			if (!face || !face.texture) {
+				return emptyMaterial;
+			}
+			var key = face.texture.substr(1);
 			if (scope.textures[key]) {
-				return scope.textures[key].material
+				return scope.textures[key].material;
 			} else {
 				return emptyMaterial;
 			}
@@ -689,13 +692,10 @@ class Model {
 
 			//Material
 				var materials = []
-				var obj = base_cube.faces
 
-				for (var face in obj) {
-					if (obj.hasOwnProperty(face)) {
-						materials.push(fetchMaterial(obj[face].texture))
-					}
-				}
+				FaceOrder.forEach(face => {
+					materials.push(fetchMaterial(base_cube.faces[face]))
+				})
 				var mesh = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MultiMaterial( materials ))
 
 			//Size
@@ -704,6 +704,7 @@ class Model {
 				mesh.geometry.computeBoundingSphere()
 
 				if (base_cube.rotation) {
+					mesh.rotation.reorder('ZYX')
 
 					mesh.position.set(base_cube.rotation.origin[0], base_cube.rotation.origin[1], base_cube.rotation.origin[2])
 					mesh.geometry.translate(-base_cube.rotation.origin[0], -base_cube.rotation.origin[1], -base_cube.rotation.origin[2])
@@ -717,7 +718,7 @@ class Model {
 						mesh.scale[base_cube.rotation.axis] = 1
 					}
 				}
-				mesh.geometry.translate(-8, -8, -8)
+				mesh.position.sub(new THREE.Vector3(8, 8, 8))
 				scope.scene_obj.add(mesh)
 			//UV
 

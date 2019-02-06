@@ -4,6 +4,7 @@ Animation tool for Minecraft: Java Edition. Utilises functions and armor stands 
 Animator is build on top of Blockbench 1.7.0 with Three.js, Vue.js and other libraries. You can contribute to the development or work on your own fork for your projects. I apologize for the partly messy code, the project was build with a deadline and I didn't have a lot of experience with coding back then.
 
 Discord Channel: [Invite (X11 Discord)](https://discord.gg/3DUqXbh)
+
 Download: [Latest Releases](https://github.com/JannisX11/animator/releases/latest)
 
 # How To Use
@@ -33,4 +34,4 @@ Go to File > Export Functions to generate your function files.
 
 Enter your scene ID and the namespace of your data pack and choose whether you want to export the camera animation, start the scene where the command is executed and what to do after the scene. Then select the functions folder inside your datadata pack.
 
-Before you can play your animation, you need to set up the function `<namespace>:scenes/core` on repeat. When you are done, you can start your function using `/function <namespace>:scenes/<animation_id>/start`. To see the camera movement, give yourself the `camera`-tag.
+After exporting and reloading the data pack, you can start your function using `/function <namespace>:scenes/<animation_id>/start`. To see the camera movement, give yourself the `camera`-tag.

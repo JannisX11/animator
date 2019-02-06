@@ -35,19 +35,11 @@ class Exporter {
 		)
 		this.folder = path + osfs + 'scenes';// + osfs + this.id;
 
-		try {
-			fs.readdirSync(this.folder)
-		} catch (err) {
-			fs.mkdirSync(this.folder)
-		}
+		makeFolder(this.folder)
 		this.folder += osfs + this.id;
-		try {
-			fs.readdirSync(this.folder)
-		} catch (err) {
-			fs.mkdirSync(this.folder)
-		}
+		makeFolder(this.folder)
 
-
+		//Core Function
 		var path_arr = this.folder.split(osfs)
 		path_arr[path_arr.length-1] = 'core.mcfunction'
 		fs.readFile(path_arr.join(osfs), (err, data) => {
@@ -58,6 +50,32 @@ class Exporter {
 				data += '\nexecute as @e[type=area_effect_cloud,name='+scope.id+'_controller] at @s run function '+scope.namespace+':scenes/'+scope.id+'/loop'
 				fs.writeFile(path_arr.join(osfs), data, function (err) {})
 			}
+		});
+
+		//Tick tag
+		var tick_path = this.folder.split(osfs)
+		tick_path.splice(-4, 4, 'minecraft')
+		tick_path = tick_path.join(osfs)
+		makeFolder(tick_path)
+		tick_path += osfs + 'tags'
+		makeFolder(tick_path)
+		tick_path += osfs + 'functions'
+		makeFolder(tick_path)
+		tick_path += osfs + 'tick.json'
+		fs.readFile(tick_path, (err, data) => {
+			if (err) {
+				data = undefined;
+			}
+			if (data) {
+				try {
+					data = JSON.parse(data)
+				} catch (err) {}
+			}
+			if (!data || !data.values) {
+				data = {values: []}
+			}
+			data.values.push(`${scope.namespace}:scenes/core`)
+			fs.writeFile(tick_path, JSON.stringify(data, null, '\t'), function (err) {})
 		});
 
 

@@ -48,6 +48,7 @@ function initCanvas() {
 	scene.add(Sun);
 
 	lights = new THREE.Object3D()
+	lights.name = 'lights_group'
 	
 	var light_top = new THREE.DirectionalLight( 0x777777 );
 	light_top.position.set(8, 100, 8)
