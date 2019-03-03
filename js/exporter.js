@@ -170,9 +170,9 @@ class Exporter {
 
 						cmds.push(selector+'run teleport @e[type=armor_stand,tag='+A.tag+'] ~'+pos.x +' ~'+pos.y +' ~'+pos.z)
 						cmds.push(selector+'as @e[type=armor_stand,tag='+A.tag+'] run data merge entity @s {Pose:{Head:['+
-							radToDegree(frameData.rot.x + e_frameData.rot.x)+'f,'+
-							radToDegree(frameData.rot.y + e_frameData.rot.y)+'f,'+
-							radToDegree(frameData.rot.z + e_frameData.rot.z)+'f]}'+
+							radToDegree( frameData.rot.x + e_frameData.rot.x)+'f,'+
+							radToDegree(-frameData.rot.y - e_frameData.rot.y)+'f,'+
+							radToDegree(-frameData.rot.z - e_frameData.rot.z)+'f]}'+
 							item_nbt + '}')
 					})
 				} else if (E.type === 'framedata') {
