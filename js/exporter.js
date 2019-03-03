@@ -92,7 +92,7 @@ class Exporter {
 					start_mf += '\nsummon armor_stand ~'+pos.x +' ~'+pos.y +' ~'+pos.z+
 						' {Pose:{Head:['+radToDegree(frameData.rot.x)+'f,'+radToDegree(frameData.rot.y)+'f,'+radToDegree(frameData.rot.z)+'f]},'+
 						'Invisible:1,NoGravity:1,Tags:["'+A.tag+'","scene_'+scope.id+'"]'+
-						(frameData.item ? ',ArmorItems:[{},{},{},{Count:1b,Damage:'+frameData.item.damage+'s,id:"minecraft:'+frameData.item.id+'"}]' : '')+
+						(frameData.item ? ',ArmorItems:[{},{},{},{Count:1b,tag:{Damage:'+frameData.item.damage+',Unbreakable:1},id:"minecraft:'+frameData.item.id+'"}]' : '')+
 						'}'
 				})
 			}
@@ -157,7 +157,7 @@ class Exporter {
 							var code = frameData.item.id+frameData.item.damage
 							if (code !== A.previousItem) {
 								A.previousItem = code
-								item_nbt = ',ArmorItems:[{},{},{},{Count:1b,Damage:'+frameData.item.damage+'s,id:"minecraft:'+frameData.item.id+'"}]'
+								item_nbt = ',ArmorItems:[{},{},{},{Count:1b,tag:{Damage:'+frameData.item.damage+',Unbreakable:1},id:"minecraft:'+frameData.item.id+'"}]'
 							}
 						} else {
 							A.previousItem = ''
