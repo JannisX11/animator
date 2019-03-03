@@ -13,9 +13,10 @@ class TimelineObj {
 		this.scene_obj;
 		this.keyframes = new Keyframes()
 		this.scene_obj = new THREE.Object3D()
+		this.scene_obj.rotation.reorder('ZYX')
 		this.uuid = guid()
 	}
-	setFrame(line) {
+	setFrame() {
 		var scope = this;
 		var obj = this.scene_obj
 		var keyframe = {
@@ -394,7 +395,6 @@ class ArmorStand extends TimelineObj {
 		this.name = name ? name : 'Armor Stand'
 		this.type = 'armor_stand'
 		this.parent = parent
-		this.scene_obj = new THREE.Object3D()
 		this.parent.scene_obj.add(this.scene_obj)
 		this.uuid = guid()
 	}
@@ -448,6 +448,7 @@ class Item {
 			scope.modelname = pathToName(p, true)
 			scope.modelpath = p
 		})
+		return this;
 	}
 	select() {
 		if (selected && selected.type === 'armor_stand') {
@@ -459,6 +460,38 @@ class Item {
 			selected.setFrame()
 			displayFrame()
 		}
+		return this;
+	}
+	remove() {
+		var scope = this;
+		Items.remove(scope)
+		Elements.forEach(E => {
+			E.children.forEach(AS => {
+				if (AS.keyframes.frames) {
+					for (var index in AS.keyframes.frames) {
+						var kf = AS.keyframes.frames[index]
+						if (kf.item === scope) {
+							kf.item = false;
+						}
+					}
+				}
+				if (AS.item === scope) {
+					AS.item = false;
+				}
+			})
+		})
+		displayFrame(timeline.frame)
+	}
+	showContextMenu(event) {
+		var scope = this;
+		new ContextMenu(event, [
+			{icon: 'add', name: 'Load Model', click: function() {
+				scope.loadModel()
+			}},
+			{icon: 'delete', name: 'Remove', click: function() {
+				scope.remove()
+			}}
+		])
 	}
 }
 class Cube {
@@ -582,7 +615,7 @@ class Keyframes {
 					var quat_pre = new THREE.Quaternion().setFromEuler(pre.rot)
 					var quat_post = new THREE.Quaternion().setFromEuler(post.rot)
 					quat_pre.slerp(quat_post, factor)
-					result.rot = new THREE.Euler().setFromQuaternion(quat_pre)
+					result.rot = new THREE.Euler().setFromQuaternion(quat_pre, 'ZYX')
 				}
 				return result;
 			}

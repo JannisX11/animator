@@ -159,7 +159,36 @@ function initializeTimeline() {
 					}},
 					{icon: 'fa-arrow-circle-left', name: 'Ease Out', click: function() {
 						F.mode = frame.mode = 'ease_out'
+					}},
+
+
+					{icon: 'location_on', name: 'Set Position', click: function() {
+						Prop.posDialogObj = function(x, y, z) {
+							F.x = x;
+							F.y = y;
+							F.z = z;
+							displayFrame(timeline.frame)
+						}
+						showDialog('position_dialog')
+						$('#position_x').val(F.x)
+						$('#position_y').val(F.y)
+						$('#position_z').val(F.z)
+					}},
+					{icon: 'autorenew', name: 'Set Rotation', click: function() {
+						Prop.posDialogObj = function(x, y, z) {
+							F.rot.x = degreeToRad(x);
+							F.rot.y = degreeToRad(y);
+							F.rot.z = degreeToRad(z);
+							displayFrame(timeline.frame)
+						}
+						showDialog('position_dialog')
+						$('#position_x').val(radToDegree(F.rot.x))
+						$('#position_y').val(radToDegree(F.rot.y))
+						$('#position_z').val(radToDegree(F.rot.z))
 					}}
+
+
+
 				])
 			},
 			selectFrame: function(frame, line, event) {

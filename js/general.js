@@ -1,4 +1,4 @@
-var appVersion = '1.1.2'
+var appVersion = '1.1.3'
 var File, i;
 var keybinds, settings, display_presets;
 var _vect;
@@ -32,9 +32,6 @@ Array.prototype.remove = function(tag) {
 		return val;
 	}
 }
-/*
-
-*/
 
 $(document).mousedown(function(e) {
 	if (e.which === 1) held_keys.leftclick = true

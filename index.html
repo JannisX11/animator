@@ -155,7 +155,7 @@
             <div class="tool f_left" onclick="createItem()"><i class="material-icons">add</i><div class="tooltip">Create Item</div></div>
             <input type="text" class="dark_bordered" id="item_search_bar" style="width: 200px" oninput="itemlist.updateSearch()">
             <ul id="item_list">
-                <li v-for="item in filteredItems" class="item">
+                <li v-for="item in filteredItems" class="item" v-on:contextmenu="item.showContextMenu($event)">
                     <div class="selection_indicator" v-bind:class="{enabled: item.isOnModel}" v-on:click="item.select()"></div>
                     <i class="material-icons">label</i><input type="text" class="dark_bordered" style="width: 152px; float: left;" v-model="item.id">
                     <i class="material-icons">code</i><input type="number" class="dark_bordered" style="width: 40px" v-model="item.damage">
